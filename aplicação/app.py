@@ -168,7 +168,7 @@ mtrans = mtrans_dict.get(input_mtrans)
 
 # Carregando o Modelo
 
-model = joblib.load("modelo/model_obesity.pkl")
+model = joblib.load("modelo/model_obesityv2.pkl")
 
 
 usuario_predict_df = pd.DataFrame([{
@@ -241,4 +241,5 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
