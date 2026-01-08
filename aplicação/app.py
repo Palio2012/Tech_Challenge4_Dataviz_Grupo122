@@ -175,7 +175,7 @@ usuario_predict_df = pd.DataFrame([{
     # Dados Pessoais
     "gender": input_gender, 
     "age": age,
-    "family_history": input_family_history, 
+    "family_history_with_overweight": input_family_history, 
     
     # Alimentação
     "favc": input_favc,
@@ -241,6 +241,7 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
 
 
