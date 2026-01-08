@@ -175,7 +175,7 @@ usuario_predict_df = pd.DataFrame([{
     # Dados Pessoais
     "gender": input_gender, 
     "age": age,
-    "family_history_with_overweight": input_family_history, 
+    "family_history": input_family_history, 
     
     # Alimentação
     "favc": input_favc,
@@ -204,22 +204,6 @@ col_btn1, col_btn2, col_btn3 = st.columns([1, 2, 1])
 
 with col_btn2:
     avaliar = st.button("🔍 Avaliar nível de obesidade", use_container_width=True)
-
-# --- ÁREA DE DIAGNÓSTICO (Apagar depois de resolver) ---
-st.write("### Diagnóstico de Colunas")
-cols_modelo = list(model.feature_names_in_)
-cols_dataframe = list(usuario_predict_df.columns)
-
-st.write("**Colunas que o MODELO espera:**", cols_modelo)
-st.write("**Colunas que o DATAFRAME possui:**", cols_dataframe)
-
-# Achar a diferença
-diferenca = set(cols_modelo) - set(cols_dataframe)
-st.error(f"⚠️ Colunas faltando no DataFrame: {diferenca}")
-# -------------------------------------------------------
-
-# Sua linha original que dá erro:
-usuario_predict_df = usuario_predict_df[model.feature_names_in_]
 
 
 # Resultado
@@ -257,6 +241,7 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
 
 
