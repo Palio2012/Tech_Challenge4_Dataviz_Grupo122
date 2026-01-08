@@ -145,8 +145,6 @@ usuario_predict_df = pd.DataFrame([{
     "MTRANS": MTRANS
 }])
 
-usuario_predict_df = usuario_predict_df[model.feature_names_in_]
-
 # Botão Central
 
 st.markdown("---")
@@ -190,6 +188,7 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
 
 
