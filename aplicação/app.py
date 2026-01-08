@@ -173,26 +173,26 @@ model = joblib.load("modelo/model_obesityv2.pkl")
 
 usuario_predict_df = pd.DataFrame([{
     # Dados Pessoais
-    "gender": input_gender, 
+    "gender": gender, 
     "age": age,
     "family_history": family_history,
     
     # Alimentação
-    "favc": input_favc,
-    "fcvc": input_fcvc, 
+    "favc": favc,
+    "fcvc": fcvc, 
     "ncp": ncp,
-    "caec": input_caec,
+    "caec": caec,
 
     # Estilo de Vida
-    "smoke": input_smoke,
-    "ch2o": input_ch2o, 
-    "scc": input_scc,
-    "faf": input_faf, 
-    "tue": input_tue, 
+    "smoke": smoke,
+    "ch2o": ch2o, 
+    "scc": scc,
+    "faf": faf, 
+    "tue": tue, 
     
     # Outros
-    "calc": input_calc,
-    "mtrans": input_mtrans
+    "calc": calc,
+    "mtrans": mtrans
 }])
 
 usuario_predict_df = usuario_predict_df[model.feature_names_in_]
@@ -241,6 +241,7 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
 
 
