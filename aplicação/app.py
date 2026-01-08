@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import joblib
+import os
 
 # Configuração da página
 
@@ -41,61 +42,42 @@ col1, col2, col3 = st.columns(3)
 
 with col1:
     st.subheader("🧍 Dados Pessoais")
-
-    input_gender = st.radio("Gênero", ["Masculino", "Feminino"])
-    gender_dict = {"Masculino": 1, "Feminino": 2}
-    gender = gender_dict.get(input_gender)
-
-    age = st.number_input("Idade", 10, 100)
-
-    input_family_history = st.radio("Histórico familiar de obesidade?", ["Sim", "Não"])
-    family_history_dict = {"Sim": 1, "Não": 0}
-    family_history = family_history_dict.get(input_family_history)
+    Gender = st.radio("Gênero", ["Masculino", "Feminino"])
+    Age = st.number_input("Idade", 10, 100)
+    family_history_with_overweight = st.radio(
+        "Histórico familiar de obesidade?", ["Sim", "Não"]
+    )
 
 # Alimentação
 
 with col2:
     st.subheader("🍽️ Alimentação")
+    FAVC = st.radio(
+        "Consome alimentos calóricos frequentemente?", ["Sim", "Não"]
+    )
+    FCVC = st.radio(
+        "Consome vegetais regularmente?", ["Sim", "Não"]
+    )
+    NCP = st.number_input("Refeições principais por dia", 0, 10)
 
-    input_favc = st.radio("Consome alimentos calóricos frequentemente?", ["Sim", "Não"])
-    favc_dict = {"Sim": 1, "Não": 0}
-    favc = favc_dict.get(input_favc)
-
-    input_fcvc = st.radio("Consome vegetais regularmente?", ["Sim", "Não"])
-    fcvc_dict = {"Sim": 1, "Não": 0}
-    fcvc = fcvc_dict.get(input_fcvc)
-
-    ncp = st.number_input("Refeições principais por dia", 0, 10)
-
-    input_caec = st.radio(
+    CAEC = st.radio(
         "Consome lanches entre as refeições?",
         ["Não", "Ás vezes", "Frequentemente", "Sempre"]
     )
-    caec_dict = {"Não": 0, "Ás vezes": 1, "Frequentemente": 2, "Sempre": 3}
-    caec = caec_dict.get(input_caec)
 
 
 # Estilo de Vida
 
 with col3:
     st.subheader("🏃 Estilo de Vida")
+    SMOKE = st.radio("Fumante?", ["Sim", "Não"])
 
-    input_smoke = st.radio("Fumante?", ["Sim", "Não"])
-    smoke_dict = {"Sim": 1, "Não": 0}
-    smoke = smoke_dict.get(input_smoke)
-
-    input_ch2o = st.radio(
+    CH2O = st.radio(
         "Consumo diário de água",
         ["1 litro ou menos", "1,5 litros", "2 litros ou mais"]
     )
-    ch2o_dict = {
-        "1 litro ou menos": 1,
-        "1,5 litros": 2,
-        "2 litros ou mais": 3
-    }
-    ch2o = ch2o_dict.get(input_ch2o)
 
-    input_faf = st.radio(
+    FAF = st.radio(
         "Atividade física",
         [
             "Nenhuma",
@@ -104,13 +86,6 @@ with col3:
             "5 vezes na semana ou mais"
         ]
     )
-    faf_dict = {
-        "Nenhuma": 0,
-        "1 ou 2 vezes na semana": 1,
-        "3 ou 4 vezes na semana": 2,
-        "5 vezes na semana ou mais": 3
-    }
-    faf = faf_dict.get(input_faf)
 
 
 # Hábitos Adicionais
@@ -119,72 +94,55 @@ with st.expander("🧬 Outros hábitos"):
     col4, col5, col6 = st.columns(3)
 
     with col4:
-        input_scc = st.radio("Monitora ingestão calórica?", ["Sim", "Não"])
-        scc_dict = {"Sim": 1, "Não": 0}
-        scc = scc_dict.get(input_scc)
+        SCC = st.radio("Monitora ingestão calórica?", ["Sim", "Não"])
 
     with col5:
-        input_tue = st.radio(
+        TUE = st.radio(
             "Tempo em eletrônicos",
             ["0-2h por dia", "3-5h por dia", "5h por dia ou mais"]
         )
-        tue_dict = {
-            "0-2h por dia": 0,
-            "3-5h por dia": 1,
-            "5h por dia ou mais": 2
-        }
-        tue = tue_dict.get(input_tue)
 
     with col6:
-        input_calc = st.radio(
+        CALC = st.radio(
             "Consumo de álcool",
             ["Não bebe", "Ás vezes", "Frequentemente", "Sempre"]
         )
-        calc_dict = {
-            "Não bebe": 0,
-            "Ás vezes": 1,
-            "Frequentemente": 2,
-            "Sempre": 3
-        }
-        calc = calc_dict.get(input_calc)
-
 
 # Transporte
 
 st.subheader("🚗 Transporte")
-input_mtrans = st.selectbox(
+MTRANS = st.selectbox(
     "Meio de transporte habitual",
     ["Caminhando", "Bicicleta", "Transporte Público", "Motocicleta", "Automóvel"]
 )
-mtrans_dict = {
-    "Caminhando": 1,
-    "Bicicleta": 2,
-    "Transporte Público": 3,
-    "Motocicleta": 4,
-    "Automóvel": 5
-}
-mtrans = mtrans_dict.get(input_mtrans)
 
 # Carregando o Modelo
 
-model = joblib.load("modelo/model_obesity.pkl")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "..", "modelo", "model_obesity.pkl")
 
+@st.cache_resource
+def load_model():
+    return joblib.load(MODEL_PATH)
 
+model = load_model()
+
+# Novo Usuário
 usuario_predict_df = pd.DataFrame([{
-    "gender": gender,
-    "age": age,
-    "family_history": family_history,
-    "favc": favc,
-    "fcvc": fcvc,
-    "ncp": ncp,
-    "caec": caec,
-    "smoke": smoke,
-    "ch2o": ch2o,
-    "scc": scc,
-    "faf": faf,
-    "tue": tue,
-    "calc": calc,
-    "mtrans": mtrans
+    "Gender": Gender,
+    "Age": Age,
+    "family_history_with_overweight": family_history_with_overweight,
+    "FAVC": FAVC,
+    "FCVC": FCVC,
+    "NCP": NCP,
+    "CAEC": CAEC,
+    "SMOKE": SMOKE,
+    "CH2O": CH2O,
+    "SCC": SCC,
+    "FAF": FAF,
+    "TUE": TUE,
+    "CALC": CALC,
+    "MTRANS": MTRANS
 }])
 
 usuario_predict_df = usuario_predict_df[model.feature_names_in_]
@@ -229,9 +187,9 @@ if avaliar:
         else:
             st.error("Confiança estimada: Baixa")
 
-
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
 
 
