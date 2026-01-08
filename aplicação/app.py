@@ -1,8 +1,3 @@
-import streamlit as st
-import pandas as pd
-import joblib
-
-
 # Configuração da página
 
 st.set_page_config(
@@ -234,3 +229,4 @@ if avaliar:
 # Rodapé
 
 st.caption("⚠️ Este aplicativo tem finalidade educacional e não substitui avaliação médica.")
+
